@@ -1,3 +1,5 @@
+package exercise1.shoppingcart;
+
 public class Product {
 
   private String title;

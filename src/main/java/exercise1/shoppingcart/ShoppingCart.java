@@ -1,3 +1,5 @@
+package exercise1.shoppingcart;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -38,7 +40,8 @@ public class ShoppingCart {
 
   public void printItems() {
     for (Product item : items) {
-      System.out.println("Product: " + item.getTitle() + ", Price: " + item.getPrice());
+      System.out.println("Product: " + item.getTitle() + ", Price: " + item.getPrice() + "€");
     }
+    System.out.println("Balance: " + getBalance() + "€");
   }
 }

@@ -1,4 +1,6 @@
-public class Entry {
+package exercise1.shoppingcart;
+
+public class Main {
 	public static void main(String[] args) {
 		System.out.println("Creating a shopping cart...");
 
@@ -8,12 +10,11 @@ public class Entry {
 		Product p2 = new Product("Product_2", 5.49);
 		Product p3 = new Product("Product_3", 20.00);
 
-		// Aggiungi prodotti di prova
+		shoppingCart.addItem(p1);
 		shoppingCart.addItem(p1);
 		shoppingCart.addItem(p2);
 		shoppingCart.addItem(p3);
 
-		// Stampa il contenuto del carrello
 		shoppingCart.printItems();
 
 		try {

@@ -23,9 +23,26 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.0.0</version>
-                <configuration>
-                    <mainClass>Entry</mainClass> <!-- Nessun pacchetto, quindi solo il nome della classe -->
-                </configuration>
+                <executions>
+                    <execution>
+                        <id>exercise1</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>exercise1.shoppingcart.Main</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>exercise2</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>exercise2.converter.Main</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

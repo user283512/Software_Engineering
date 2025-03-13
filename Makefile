@@ -1,23 +1,21 @@
 # Definisci le variabili
 MVN = mvn
-MAIN_CLASS = Entry
 
 # Regola predefinita
-all: clean install run
-
-# Scaricare le dipendenze
-dependencies:
-	$(MVN) dependency:copy-dependencies
+all: clean dependencies install
 
 # Pulire il progetto
 clean:
 	$(MVN) clean
 
+# Scaricare le dipendenze
+dependencies:
+	$(MVN) dependency:copy-dependencies
+
 # Installare le dipendenze e costruire il progetto
 install:
 	$(MVN) install
 
-# Eseguire il programma principale
 run:
 	$(MVN) exec:java -Dexec.mainClass=$(MAIN_CLASS)
 
