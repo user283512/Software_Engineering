@@ -1,4 +1,4 @@
-package exercise2.converter;
+package converter;
 
 public class Converter {
   public static int stringToInt(String str) throws IllegalArgumentException {

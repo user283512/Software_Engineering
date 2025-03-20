@@ -25,4 +25,8 @@ test:
 
 # Eseguire un test specifico
 test-specific:
+ifneq ($(TEST_METHOD),)
 	$(MVN) -Dtest=$(TEST_CLASS)#$(TEST_METHOD) test
+else
+	$(MVN) -Dtest=$(TEST_CLASS) test
+endif

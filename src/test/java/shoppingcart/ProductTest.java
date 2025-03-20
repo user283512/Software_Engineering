@@ -1,4 +1,4 @@
-package exercise1.shoppingcart;
+package shoppingcart;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

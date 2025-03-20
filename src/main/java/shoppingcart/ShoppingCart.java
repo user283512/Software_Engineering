@@ -1,4 +1,4 @@
-package exercise1.shoppingcart;
+package shoppingcart;
 
 import java.util.ArrayList;
 import java.util.Iterator;
