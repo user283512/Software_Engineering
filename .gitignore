@@ -1,5 +1,4 @@
-# Ignora la directory target
+.vscode/
 target/
-
-# Altri file ignorare
 *.class
+ShoppingCart/

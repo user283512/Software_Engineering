@@ -1,8 +1,12 @@
-# Build
-1. Pulire il progetto: ```make clean```
-2. Scaricare le dipendenze:  ```make dependencies```
-3. Installare le dipendenze e costruire il progetto: ```make install```
-4. Eseguire il programma principale specificato, ad esempio il seguente comando eseguira il main all'interno del package shoppingcart: ```make run MAIN_CLASS=shoppingcart.Main```
-5. Eseguire tutti i test: ```make test```
-6. Esecuzione di tutti i test in una specifica classe, ad esempio il seguente comando eseguirà tutti i test nella classe ShoppingCartTest: ```make test-specific TEST_CLASS=shoppingcart.ShoppingCartTest```
-7. Esecuzione di un test specifico in una classe, ad esempio, il seguente comando eseguirà solo il test testAddItem nella classe ShoppingCartTest: ```make test-specific TEST_CLASS=shoppingcart.ShoppingCartTest TEST_METHOD=testAddItem```
+# Create a new Maven project
+1. Run the script `create_maven_project.sh`.
+2. Enter the name of the project.
+3. Warning: the archetype `maven-archetype-quickstart` is designed 
+   to include JUnit 3 as the default testing framework.
+   If you want to use Jupiter, you need to modify the `pom.xml` file.
+
+# Useful Maven commands
+1. Compile Java files: ```mvn compile```
+2. Clean compiled files: ```mvn clean```
+3. Run the application: ```mvn exec:java```
+4. Run all tests: ```mvn test```
