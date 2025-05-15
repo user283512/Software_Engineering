@@ -1,113 +1,99 @@
 package App;
 
-import java.io.*;
-import java.net.*;
-import java.sql.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
 
 public class DBrecorder {
-	public static void fromSourceToDB(String source, String type) {
-		String keys[] = new String[100];
-		String values[] = new String[100];
-		int cont;
+	private static final String DB_URL = "jdbc:sqlite:db1.db"; 
+	private static final String DB_USER = "mas";
+	private static final String DB_PWD = "mas";
 
-		/* reading phase */
+	private static void initMap(BufferedReader bufferedReader,
+															HashMap<String, String> map) throws IOException{
+																
+		String line;
+		while ((line = bufferedReader.readLine()) != null) {
+			String key = line.substring(0, line.indexOf(' '));;
+			String value = line.substring(line.indexOf(' ') + 1);
+			map.put(key, value);
+		}
+	}
+	
+	private static void procedureDB(HashMap<String, String> map) throws ClassNotFoundException,
+																																			SQLException {
+		Class.forName("org.sqlite.JDBC");
+		Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PWD);
+		String sql = "CREATE TABLE IF NOT EXISTS tab1 (key text, value text);";
+		System.out.println(sql);
+		Statement stmt = connection.createStatement();
+		int res = stmt.executeUpdate(sql);
+		System.out.println("Returned: " + res);
+		
+		for (HashMap.Entry<String, String> en : map.entrySet()) {
+			Object key = en.getKey();
+			Object val = en.getValue();
+			sql = "INSERT INTO tab1 VALUES (\"" + key + "\", \"" + val + "\");";
+			System.out.println(sql);
 
-		if (type.equals("file")) {
-			FileReader fin = null;
-			try {
-				fin = new FileReader(source);
-			} catch (IOException e) {
-				System.err.println("Error opening " + source);
-				System.err.println(e);
-				return;
-			}
+			stmt = connection.createStatement();
+			res = stmt.executeUpdate(sql);
+			System.out.println("Returned: " + res);
+		}
+		connection.close();
+	}
 
-			try {
-				String line;
-				cont = 0;
-				BufferedReader br = new BufferedReader(fin);
-				while ((line = br.readLine()) != null) {
-					keys[cont] = line.substring(0, line.indexOf(' '));
-					values[cont] = line.substring(line.indexOf(' ') + 1);
-					cont++;
-				}
-			} catch (IOException e) {
-				System.err.println("Error reading " + source);
-				System.err.println(e);
-				return;
-			}
 
-		} else if (type.equals("net")) {
-			Socket s = null;
-			try {
-				s = new Socket(source.substring(0, source.indexOf(':')),
-						Integer.parseInt(source.substring(source.indexOf(':') + 1)));
-			} catch (Exception e) {
-				System.err.println("Error in socket " + source);
-				e.printStackTrace();
-				return;
-			}
-
-			try {
-				String line;
-				cont = 0;
-				BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-				while ((line = br.readLine()) != null) {
-					keys[cont] = line.substring(0, line.indexOf(' '));
-					values[cont] = line.substring(line.indexOf(' ') + 1);
-					System.out.println("Ricevuto: " + keys[cont] + " " + values[cont]);
-					cont++;
-				}
-				s.close();
-			} catch (Exception e) {
-				System.err.println("Error in socket " + source);
-				e.printStackTrace();
-				return;
-			}
-
-		} else {
-			System.err.println("Unknown source");
+	public static void fromSourceToDB(File file) {
+		HashMap<String, String> map = new HashMap<>();
+		try {
+			FileReader fileReader = new FileReader(file);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			initMap(bufferedReader, map);
+		}
+		catch (FileNotFoundException e) {
+			System.err.println(e);
+			return;
+		}
+		catch (IOException e){
+			System.err.println(e);
 			return;
 		}
 
-		/* recording phase */
-		String urlDB = "jdbc:sqlite:db1.db";
-		String user = "mas";
-		String pwd = "mas";
-		Statement stmt;
-		ResultSet rs;
-		String stringSql;
-		int res;
+		try {
+			procedureDB(map);
+		} 
+		catch (ClassNotFoundException | SQLException e){
+			System.err.println(e);
+		} 
+	}
+
+	public static void fromSourceToDB(String hostname, int port) {
+		HashMap<String, String> map = new HashMap<>();
+		try {
+			Socket socket = new Socket(hostname, port);
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			initMap(bufferedReader, map);
+			socket.close();
+		} 
+		catch (IOException e) {
+			System.err.println(e);
+		}
 
 		try {
-			/* connect to the DBMS */
-			Class.forName("org.sqlite.JDBC");
-			Connection con = DriverManager.getConnection(urlDB, user, pwd);
-			/* create the DB table if not exist */
-			stringSql = "CREATE TABLE IF NOT EXISTS tab1 (key text, value text);";
-			System.out.println(stringSql);
-			stmt = con.createStatement();
-			res = stmt.executeUpdate(stringSql);
-			System.out.println("Returned: " + res);
-			con.close();
-
-			/* add the couples to the DB */
-			con = DriverManager.getConnection(urlDB, user, pwd);
-
-			for (int i = 0; i < cont; i++) {
-				/* SQL command */
-				stringSql = "INSERT INTO tab1 VALUES (\"" + keys[i] + "\", \"" + values[i] + "\");";
-				System.out.println(stringSql);
-				stmt = con.createStatement();
-				res = stmt.executeUpdate(stringSql);
-				System.out.println("Returned: " + res);
-
-			}
-			con.close();
-
-		} catch (Exception e) {
-			System.out.println("Error");
-			e.printStackTrace();
-		}
+			procedureDB(map);
+		} 
+		catch (ClassNotFoundException | SQLException e){
+			System.err.println(e);
+		} 
 	}
 }

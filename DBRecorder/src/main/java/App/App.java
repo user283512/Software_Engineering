@@ -1,11 +1,12 @@
 package App;
 
+import java.io.File;
+
 public class App {
 	public static void main(String[] args) {
-		DBrecorder.fromSourceToDB(
-			"/home/simone/Desktop/software_engineering/DBRecorder/src/main/resources/prova.txt", 
-			"file");
-		// DBrecorder.fromSourceToDB("localhost:2017", "net");
-		// DBrecorder.fromSourceToDB("mars.ing.unimo.it:2017", "net");
+		File file = new File("/home/simone/Desktop/software_engineering/DBRecorder/src/main/resources/prova.txt");
+		DBrecorder.fromSourceToDB(file);
+
+		//DBrecorder.fromSourceToDB("127.0.0.1", 2017);
 	}
 }
